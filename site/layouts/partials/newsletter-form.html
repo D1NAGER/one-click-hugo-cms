@@ -1,10 +1,17 @@
-<form <form id="newsletter" data-form-id="newsletter" data-lead-type="newsletter" action="" class="flex-ns mb3">
+<form id="newsletter" data-form-id="newsletter" data-lead-type="newsletter" action="" class="flex-ns mb3">
 
-  <fieldset class="flex-auto mb2 mb0-ns mr2-ns" name="newsletter" action="newsletter-subscribe">
-    <input type="text" id="email" placeholder="Your email" class="w-100">
-    <label for="email">Your email</label>
+  <fieldset class="flex-auto mb2 mb0-ns mr2-ns" name="newsletter">
+    <input type="email"
+           id="newsletter_email"
+           name="email"
+           placeholder="Your email"
+           class="w-100"
+           required
+           autocomplete="email">
+    <label for="newsletter_email">Your email</label>
   </fieldset>
 
-  <button class="btn mb3 w-100 w-auto-ns mb0-ns raise" type="submit">Submit</button>
-
+  <button class="btn mb3 w-100 w-auto-ns mb0-ns raise" type="submit">
+    Submit
+  </button>
 </form>
