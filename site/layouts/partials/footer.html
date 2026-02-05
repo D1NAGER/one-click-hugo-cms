@@ -50,15 +50,13 @@
   window.dataLayer = window.dataLayer || [];
 
   (function () {
-    // Переконайся, що в HTML форми мають ці id:
     // <form id="contactUs">...</form>
     // <form id="newsletter">...</form>
     const FORMS = [
       { form_id: "contactUs",  lead_type: "contact",    selector: "form#contactUs" },
       { form_id: "newsletter", lead_type: "newsletter", selector: "form#newsletter" }
     ];
-
-    // Dedup: 1 раз на форму за page load
+	  
     const started = new Set();
     const viewed = new Set();
 
@@ -76,28 +74,25 @@
         started.add(meta.form_id);
         pushEvent("form_start", meta);
       };
-
-      // form_start: перший фокус/ввід в межах форми
+ 
       form.addEventListener("focusin", fire, { passive: true });
       form.addEventListener("input", fire, { passive: true });
     }
 
     function initFormView(form, meta) {
-      // form_view: коли форма видима >= 50% (можеш змінити threshold)
       const threshold = 0.5;
 
-      if (!("IntersectionObserver" in window)) return; // fallback: просто не відстрелить form_view
+      if (!("IntersectionObserver" in window)) return; 
 
       const obs = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
 
-          // entry.intersectionRatio ~ частка видимості елемента у viewport
           if (entry.intersectionRatio >= threshold) {
             if (viewed.has(meta.form_id)) return;
             viewed.add(meta.form_id);
             pushEvent("form_view", meta);
-            obs.unobserve(form); // 1 раз
+            obs.unobserve(form); 
           }
         });
       }, { threshold: [threshold] });
