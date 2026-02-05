@@ -46,5 +46,82 @@
 		</div>
 	</div>
 
+	<script>
+  window.dataLayer = window.dataLayer || [];
+
+  (function () {
+    // Переконайся, що в HTML форми мають ці id:
+    // <form id="contactUs">...</form>
+    // <form id="newsletter">...</form>
+    const FORMS = [
+      { form_id: "contactUs",  lead_type: "contact",    selector: "form#contactUs" },
+      { form_id: "newsletter", lead_type: "newsletter", selector: "form#newsletter" }
+    ];
+
+    // Dedup: 1 раз на форму за page load
+    const started = new Set();
+    const viewed = new Set();
+
+    function pushEvent(eventName, meta) {
+      window.dataLayer.push({
+        event: eventName,
+        form_id: meta.form_id,
+        lead_type: meta.lead_type
+      });
+    }
+
+    function initFormStart(form, meta) {
+      const fire = () => {
+        if (started.has(meta.form_id)) return;
+        started.add(meta.form_id);
+        pushEvent("form_start", meta);
+      };
+
+      // form_start: перший фокус/ввід в межах форми
+      form.addEventListener("focusin", fire, { passive: true });
+      form.addEventListener("input", fire, { passive: true });
+    }
+
+    function initFormView(form, meta) {
+      // form_view: коли форма видима >= 50% (можеш змінити threshold)
+      const threshold = 0.5;
+
+      if (!("IntersectionObserver" in window)) return; // fallback: просто не відстрелить form_view
+
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          // entry.intersectionRatio ~ частка видимості елемента у viewport
+          if (entry.intersectionRatio >= threshold) {
+            if (viewed.has(meta.form_id)) return;
+            viewed.add(meta.form_id);
+            pushEvent("form_view", meta);
+            obs.unobserve(form); // 1 раз
+          }
+        });
+      }, { threshold: [threshold] });
+
+      obs.observe(form);
+    }
+
+    function init() {
+      FORMS.forEach((meta) => {
+        const form = document.querySelector(meta.selector);
+        if (!form) return;
+
+        initFormStart(form, meta);
+        initFormView(form, meta);
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
 </footer>
 
