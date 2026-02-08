@@ -1,13 +1,7 @@
-/* контейнер лого */
-.navbar-brand, .logo {
-  display: flex;
-  align-items: center;
-  line-height: 1;
-}
-
-/* саме svg або img лого */
-.navbar-brand svg, .logo svg, .navbar-brand img, .logo img {
-  height: 48px;       /* або 40px */
-  width: auto;
-  display: block;
-}
+<svg viewBox="0 0 400 48" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMid meet">
+  <text x="0" y="34" fill="#008573"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="40" font-weight="700" letter-spacing="2">
+    COFIELD
+  </text>
+</svg>
